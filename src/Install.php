@@ -16,8 +16,9 @@ class Install
      */
     public static function install()
     {
-        if(!in_array(ThinkOrm::class ,config('bootstrap', []))) {
-            $config_file = config_path() . '/bootstrap.php';
+        $config_file = config_path() . '/bootstrap.php';
+        $config = include $config_file;
+        if(!in_array(ThinkOrm::class , $config ?? [])) {
             $config_file_content = file_get_contents($config_file);
             $config_file_content = preg_replace('/\];/', "    Webman\ThinkOrm\ThinkOrm::class,\n];", $config_file_content);
             file_put_contents($config_file, $config_file_content);
@@ -35,7 +36,9 @@ class Install
      */
     public static function uninstall()
     {
-        if(in_array(ThinkOrm::class ,config('bootstrap', []))) {
+        $config_file = config_path() . '/bootstrap.php';
+        $config = include $config_file;
+        if(in_array(ThinkOrm::class, $config ?? [])) {
             $config_file = config_path() . '/bootstrap.php';
             $config_file_content = file_get_contents($config_file);
             $config_file_content = preg_replace('/ {0,4}Webman\\\\ThinkOrm\\\\ThinkOrm::class,?\r?\n?/', '', $config_file_content);
