@@ -21,6 +21,7 @@ class ThinkOrm implements Bootstrap
                         Db::connect($key)->query('select 1');
                     }
                 }
+                Db::getDbLog(true);
             });
         }
     }
