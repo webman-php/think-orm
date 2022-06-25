@@ -18,7 +18,9 @@ class ThinkOrm implements Bootstrap
                 $connections = config('thinkorm.connections', []);
                 foreach ($connections as $key => $item) {
                     if ($item['type'] == 'mysql') {
-                        Db::connect($key)->query('select 1');
+                        try {
+                            Db::connect($key)->query('select 1');
+                        } catch (\Throwable $e) {}
                     }
                 }
                 Db::getDbLog(true);
