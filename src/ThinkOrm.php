@@ -4,6 +4,7 @@ namespace Webman\ThinkOrm;
 use Webman\Bootstrap;
 use Workerman\Timer;
 use think\facade\Db;
+use think\db\connector\Mysql;
 
 class ThinkOrm implements Bootstrap
 {
@@ -15,6 +16,9 @@ class ThinkOrm implements Bootstrap
         // 维持mysql心跳
         if ($worker) {
             Timer::add(55, function () {
+                if (!class_exists(Mysql::class, false)) {
+                    return;
+                }
                 $connections = config('thinkorm.connections', []);
                 foreach ($connections as $key => $item) {
                     if ($item['type'] == 'mysql') {
