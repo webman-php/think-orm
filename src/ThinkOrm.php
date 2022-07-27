@@ -1,8 +1,10 @@
 <?php
+
 namespace Webman\ThinkOrm;
 
 use Webman\Bootstrap;
 use Workerman\Timer;
+use think\Paginator;
 use think\facade\Db;
 use think\db\connector\Mysql;
 
@@ -24,10 +26,20 @@ class ThinkOrm implements Bootstrap
                     if ($item['type'] == 'mysql') {
                         try {
                             Db::connect($key)->query('select 1');
-                        } catch (\Throwable $e) {}
+                        } catch (\Throwable $e) {
+                        }
                     }
                 }
                 Db::getDbLog(true);
+            });
+        }
+        if (!isset(Paginator::$currentPageResolver)) {
+            Paginator::currentPageResolver(function ($pageName = 'page') {
+                $page = request()->input($pageName, 1);
+                if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int)$page >= 1) {
+                    return (int)$page;
+                }
+                return 1;
             });
         }
     }
