@@ -13,34 +13,37 @@ class ThinkOrm implements Bootstrap
     // 进程启动时调用
     public static function start($worker)
     {
+        $config = config('thinkorm');
+        $default = $config['default'] ?? false;
+        $connections = $config['connections'] ?? [];
         // 配置
-        Db::setConfig(config('thinkorm'));
+        Db::setConfig($config);
         // 维持mysql心跳
         if ($worker) {
-            Timer::add(55, function () {
+            Timer::add(55, function () use ($connections, $default) {
                 if (!class_exists(Mysql::class, false)) {
                     return;
                 }
-                $connections = config('thinkorm.connections', []);
                 foreach ($connections as $key => $item) {
                     if ($item['type'] == 'mysql') {
                         try {
-                            Db::connect($key)->query('select 1');
-                        } catch (\Throwable $e) {
-                        }
+                            if ($key == $default) {
+                                Db::query('select 1');
+                            } else {
+                                Db::connect($key)->query('select 1');
+                            }
+                        } catch (Throwable $e) {}
                     }
                 }
                 Db::getDbLog(true);
             });
         }
-        if (!isset(Paginator::$currentPageResolver)) {
-            Paginator::currentPageResolver(function ($pageName = 'page') {
-                $page = request()->input($pageName, 1);
-                if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int)$page >= 1) {
-                    return (int)$page;
-                }
-                return 1;
-            });
-        }
+        Paginator::currentPageResolver(function ($pageName = 'page') {
+            $page = request()->input($pageName, 1);
+            if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int)$page >= 1) {
+                return (int)$page;
+            }
+            return 1;
+        });
     }
 }
