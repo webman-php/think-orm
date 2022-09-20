@@ -7,7 +7,8 @@ use Workerman\Timer;
 use Throwable;
 use think\Paginator;
 use think\facade\Db;
-use think\db\connector\Mysql;
+use think\DbManager;
+use think\Container;
 
 class ThinkOrm implements Bootstrap
 {
@@ -15,21 +16,23 @@ class ThinkOrm implements Bootstrap
     public static function start($worker)
     {
         $config = config('thinkorm');
-        $default = $config['default'] ?? false;
-        $connections = $config['connections'] ?? [];
         // 配置
         Db::setConfig($config);
         // 维持mysql心跳
         if ($worker) {
-            Timer::add(55, function () use ($connections, $default) {
+            if (class_exists(Container::class, false)) {
+                $manager_instance = Container::getInstance()->make(DbManager::class);
+            } else {
                 $reflect = new \ReflectionClass(Db::class);
                 $property = $reflect->getProperty('instance');
                 $property->setAccessible(true);
-                $instance = $property->getValue();
-                $reflect = new \ReflectionClass($property->getValue());
+                $manager_instance = $property->getValue();
+            }
+            Timer::add(55, function () use ($manager_instance) {
+                $reflect = new \ReflectionClass($manager_instance);
                 $property = $reflect->getProperty('instance');
                 $property->setAccessible(true);
-                $instances  = $property->getValue($instance);
+                $instances  = $property->getValue($manager_instance);
                 foreach ($instances as $connection) {
                     /* @var \think\db\connector\Mysql $connection */
                     if ($connection->getConfig('type') == 'mysql') {
