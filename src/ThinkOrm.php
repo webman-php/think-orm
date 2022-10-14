@@ -60,5 +60,10 @@ class ThinkOrm implements Bootstrap
             }
             return 1;
         });
+
+        // 设置分页url中域名与参数之间的path字符串
+        Paginator::currentPathResolver(function (){
+            return request()->path();
+        });
     }
 }
