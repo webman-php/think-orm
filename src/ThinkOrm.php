@@ -46,7 +46,7 @@ class ThinkOrm implements Bootstrap
         }
 
         // 自定义分页组件类
-        $bootstrap = $config['connections'][$config['default']]['bootstrap'];
+        $bootstrap = $config['connections'][$config['default']]['bootstrap'] ?? false;
         if($bootstrap && class_exists($bootstrap)){
             Paginator::maker(function ($items, $listRows, $currentPage, $total, $simple, $options) use ($bootstrap){
                 return (new \ReflectionClass($bootstrap))->newInstanceArgs(func_get_args());
@@ -55,7 +55,11 @@ class ThinkOrm implements Bootstrap
 
 
         Paginator::currentPageResolver(function ($pageName = 'page') {
-            $page = request()->input($pageName, 1);
+            $request = request();
+            if (!$request) {
+                return 1;
+            }
+            $page = $request->input($pageName, 1);
             if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int)$page >= 1) {
                 return (int)$page;
             }
@@ -64,7 +68,8 @@ class ThinkOrm implements Bootstrap
 
         // 设置分页url中域名与参数之间的path字符串
         Paginator::currentPathResolver(function (){
-            return request()->path();
+            $request = request();
+            return $request ? $request->path() : '/';
         });
     }
 }
