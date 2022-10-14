@@ -48,7 +48,7 @@ class ThinkOrm implements Bootstrap
         // 自定义分页组件类
         if($config['bootstrap'] && class_exists($config['bootstrap'])){
             Paginator::maker(function ($items, $listRows, $currentPage, $total, $simple, $options){
-                return new $config['bootstrap']($items, $listRows, $currentPage, $total, $simple, $options);
+                return (new \ReflectionClass($config['bootstrap']))->newInstanceArgs(func_get_args());
             });
         }
 
