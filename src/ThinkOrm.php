@@ -45,6 +45,14 @@ class ThinkOrm implements Bootstrap
             });
         }
 
+        // 自定义分页组件类
+        if($config['bootstrap'] && class_exists($config['bootstrap'])){
+            Paginator::maker(function ($items, $listRows, $currentPage, $total, $simple, $options){
+                return new $config['bootstrap']($items, $listRows, $currentPage, $total, $simple, $options);
+            });
+        }
+
+
         Paginator::currentPageResolver(function ($pageName = 'page') {
             $page = request()->input($pageName, 1);
             if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int)$page >= 1) {
