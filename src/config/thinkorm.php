@@ -17,7 +17,10 @@ return [
             // 数据库连接端口
             'hostport' => '3306',
             // 数据库连接参数
-            'params' => [],
+            'params' => [
+                // 连接超时3秒
+                \PDO::ATTR_TIMEOUT => 3,
+            ],
             // 数据库编码默认采用utf8
             'charset' => 'utf8',
             // 数据库表前缀
