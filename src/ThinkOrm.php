@@ -40,7 +40,7 @@ class ThinkOrm implements Bootstrap
                 }
                 foreach ($instances as $connection) {
                     /* @var \think\db\connector\Mysql $connection */
-                    if ($connection->getConfig('type') == 'mysql') {
+                    if (in_array($connection->getConfig('type'), ['mysql', 'oracle', 'sqlsrv'])) {
                         try {
                             $connection->query('select 1');
                         } catch (Throwable $e) {}
