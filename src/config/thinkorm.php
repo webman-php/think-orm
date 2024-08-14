@@ -27,8 +27,6 @@ return [
             'prefix' => '',
             // 断线重连
             'break_reconnect' => true,
-            // 关闭SQL监听日志
-            'trigger_sql' => false,
             // 自定义分页类
             'bootstrap' =>  ''
         ],
