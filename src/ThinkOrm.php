@@ -16,6 +16,9 @@ class ThinkOrm implements Bootstrap
     public static function start($worker)
     {
         $config = config('thinkorm');
+        if (!$config) {
+            return;
+        }
         // 配置
         Db::setConfig($config);
         // 维持mysql心跳
