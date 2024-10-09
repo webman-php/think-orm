@@ -3,7 +3,6 @@
   "type": "library",
   "license": "MIT",
   "require": {
-    "workerman/webman-framework": "^1.2.1",
     "topthink/think-orm": "^2.0.53 || ^3.0.0"
   },
   "autoload": {
