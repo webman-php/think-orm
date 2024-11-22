@@ -1,13 +1,15 @@
 {
-  "name": "webman/think-orm",
-  "type": "library",
-  "license": "MIT",
-  "require": {
-    "topthink/think-orm": "^2.0.53 || ^3.0.0 || ^4.* || 4.*"
-  },
-  "autoload": {
-    "psr-4": {
-      "Webman\\ThinkOrm\\": "src"
+    "name": "webman/think-orm",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "topthink/think-orm": "^2.0.53 || ^3.0.0 || ^4.0.0 || dev-master"
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Webman\\ThinkOrm\\": "src"
+        }
     }
-  }
 }
