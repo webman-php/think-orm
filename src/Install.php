@@ -14,15 +14,8 @@ class Install
      * Install
      * @return void
      */
-    public static function install()
+    public static function install(): void
     {
-        $config_file = config_path() . '/bootstrap.php';
-        $config = include $config_file;
-        if(!in_array(ThinkOrm::class , $config ?? [])) {
-            $config_file_content = file_get_contents($config_file);
-            $config_file_content = preg_replace('/\];/', "    Webman\ThinkOrm\ThinkOrm::class,\n];", $config_file_content);
-            file_put_contents($config_file, $config_file_content);
-        }
         $thinkorm_file = config_path() . '/thinkorm.php';
         if (!is_file($thinkorm_file)) {
             copy(__DIR__ . '/config/thinkorm.php', $thinkorm_file);
@@ -34,16 +27,8 @@ class Install
      * Uninstall
      * @return void
      */
-    public static function uninstall()
+    public static function uninstall(): void
     {
-        $config_file = config_path() . '/bootstrap.php';
-        $config = include $config_file;
-        if(in_array(ThinkOrm::class, $config ?? [])) {
-            $config_file = config_path() . '/bootstrap.php';
-            $config_file_content = file_get_contents($config_file);
-            $config_file_content = preg_replace('/ {0,4}Webman\\\\ThinkOrm\\\\ThinkOrm::class,?\r?\n?/', '', $config_file_content);
-            file_put_contents($config_file, $config_file_content);
-        }
         $thinkorm_file = config_path() . '/thinkorm.php';
         if (is_file($thinkorm_file)) {
             unlink($thinkorm_file);
@@ -55,7 +40,7 @@ class Install
      * installByRelation
      * @return void
      */
-    public static function installByRelation()
+    public static function installByRelation(): void
     {
         foreach (static::$pathRelation as $source => $dest) {
             if ($pos = strrpos($dest, '/')) {
@@ -73,7 +58,7 @@ class Install
      * uninstallByRelation
      * @return void
      */
-    public static function uninstallByRelation()
+    public static function uninstallByRelation(): void
     {
         foreach (static::$pathRelation as $source => $dest) {
             $path = base_path()."/$dest";

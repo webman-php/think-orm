@@ -28,7 +28,14 @@ return [
             // 断线重连
             'break_reconnect' => true,
             // 自定义分页类
-            'bootstrap' =>  ''
+            'bootstrap' =>  '',
+            'pool' => [
+                'max_connections' => 5,
+                'min_connections' => 1,
+                'wait_timeout' => 3,
+                'idle_timeout' => 60,
+                'heartbeat_interval' => 50,
+            ],
         ],
     ],
 ];
