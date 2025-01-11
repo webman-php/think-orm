@@ -39,7 +39,7 @@ class DbManager extends \think\DbManager
         if (empty($name)) {
             $name = $this->getConfig('default', 'mysql');
         }
-        $key = "thinkorm.connections.$name";
+        $key = "think-orm.connections.$name";
         $connection = Context::get($key);
         if (!$connection) {
             if (!isset(static::$pools[$name])) {

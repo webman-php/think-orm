@@ -29,6 +29,7 @@ return [
             'break_reconnect' => true,
             // 自定义分页类
             'bootstrap' =>  '',
+            // 连接池配置(仅在swow/swoole驱动下有效)
             'pool' => [
                 'max_connections' => 5,
                 'min_connections' => 1,

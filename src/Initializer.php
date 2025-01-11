@@ -12,7 +12,7 @@ class Initializer
      */
     public static function init(): void
     {
-        $config = config('thinkorm');
+        $config = config('think-orm');
         if (!$config) {
             return;
         }

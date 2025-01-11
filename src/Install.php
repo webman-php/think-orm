@@ -8,7 +8,7 @@ class Install
     /**
      * @var array
      */
-    protected static $pathRelation = [];
+    protected static array $pathRelation = [];
 
     /**
      * Install
@@ -16,9 +16,10 @@ class Install
      */
     public static function install(): void
     {
-        $thinkorm_file = config_path() . '/thinkorm.php';
+        $thinkorm_file = config_path() . '/think-orm.php';
         if (!is_file($thinkorm_file)) {
-            copy(__DIR__ . '/config/thinkorm.php', $thinkorm_file);
+            echo 'Create config/think-orm.php' . PHP_EOL;
+            copy(__DIR__ . '/config/think-orm.php', $thinkorm_file);
         }
         static::installByRelation();
     }
@@ -29,8 +30,9 @@ class Install
      */
     public static function uninstall(): void
     {
-        $thinkorm_file = config_path() . '/thinkorm.php';
+        $thinkorm_file = config_path() . '/think-orm.php';
         if (is_file($thinkorm_file)) {
+            echo 'Remove config/think-orm.php' . PHP_EOL;
             unlink($thinkorm_file);
         }
         self::uninstallByRelation();
@@ -49,7 +51,6 @@ class Install
                     mkdir($parent_dir, 0777, true);
                 }
             }
-            //symlink(__DIR__ . "/$source", base_path()."/$dest");
             copy_dir(__DIR__ . "/$source", base_path()."/$dest");
         }
     }
