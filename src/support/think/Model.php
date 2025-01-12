@@ -3,11 +3,27 @@
 namespace support\think;
 
 use think\db\Query;
+use think\db\BaseQuery;
 use think\model\Collection;
 
 require_once __DIR__ . '/../../Initializer.php';
 
 /**
+ * @method static Db name(string $name) 指定当前数据表名（不含前缀）
+ * @method static Db table(mixed $table) 指定当前操作的数据表
+ * @method static mixed transaction(callable $callback) 执行数据库事务
+ * @method static void startTrans() 启动事务
+ * @method static void commit() 用于非自动提交状态下面的查询提交
+ * @method static void rollback() 事务回滚
+ * @method array query(string $sql, array $bind = []) 执行查询 返回数据集
+ * @method Db master(bool $readMaster = true) 设置从主服务器读取数据
+ * @method int execute(string $sql, array $bind = []) 执行语句
+ * @method BaseQuery connect(string|null $name = null, bool $force = false) 创建/切换数据库连接查询
+ * @method static void setConfig($config) 设置配置对象
+ * @method static mixed getConfig(string $name = '', $default = null) 获取配置参数
+ * @method static void setEvent(\think\Event $event) 设置Event对象
+ * @method static void event(string $event, callable $callback) 注册回调方法
+ * @method static mixed trigger(string $event, $params = null, bool $once = false) 触发事件
  * @method static Query where(mixed $field, string $op = null, mixed $condition = null)  查询条件
  * @method static Query whereTime(string $field, string $op, mixed $range = null) 查询日期和时间
  * @method static Query whereBetweenTime(string $field, mixed $startTime, mixed $endTime) 查询日期或者时间范围
