@@ -6,7 +6,6 @@ namespace Webman\ThinkOrm;
 
 use Illuminate\Events\Dispatcher;
 use Webman\Context;
-use Workerman\Coroutine\Coroutine;
 use Workerman\Coroutine\Pool;
 use Throwable;
 use think\db\ConnectionInterface;
@@ -61,7 +60,7 @@ class DbManager extends \think\DbManager
                 $connection = static::$pools[$name]->get();
                 Context::set($key, $connection);
             } finally {
-                Coroutine::defer(function () use ($connection, $name) {
+                Context::onDestroy(function () use ($connection, $name) {
                     try {
                         $connection && static::$pools[$name]->put($connection);
                     } catch (Throwable) {
