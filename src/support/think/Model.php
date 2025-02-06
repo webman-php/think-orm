@@ -6,8 +6,6 @@ use think\db\Query;
 use think\db\BaseQuery;
 use think\model\Collection;
 
-require_once __DIR__ . '/../../Initializer.php';
-
 /**
  * @method static Db name(string $name) 指定当前数据表名（不含前缀）
  * @method static Db table(mixed $table) 指定当前操作的数据表

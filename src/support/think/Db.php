@@ -17,8 +17,6 @@ use think\Event;
 use think\Facade;
 use Webman\ThinkOrm\DbManager;
 
-require_once __DIR__ . '/../../Initializer.php';
-
 /**
  * Class Db
  * 数据库操作类

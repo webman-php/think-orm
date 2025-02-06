@@ -16,12 +16,21 @@ class Install
      */
     public static function install(): void
     {
-        $thinkorm_file = config_path() . '/think-orm.php';
-        if (!is_file($thinkorm_file)) {
+        $thinkorm_file = config_path('think-orm.php');
+        $thinkorm_file_old = config_path('thinkorm.php');
+        if (!is_file($thinkorm_file) && !is_file($thinkorm_file_old)) {
             echo 'Create config/think-orm.php' . PHP_EOL;
             copy(__DIR__ . '/config/think-orm.php', $thinkorm_file);
         }
         static::installByRelation();
+
+        $config_file = config_path() . '/bootstrap.php';
+        $config = include $config_file;
+        if(!in_array(ThinkOrm::class , $config ?? [])) {
+            $config_file_content = file_get_contents($config_file);
+            $config_file_content = preg_replace('/\];/', "    Webman\ThinkOrm\ThinkOrm::class,\n];", $config_file_content);
+            file_put_contents($config_file, $config_file_content);
+        }
     }
 
     /**
@@ -30,10 +39,19 @@ class Install
      */
     public static function uninstall(): void
     {
-        $thinkorm_file = config_path() . '/think-orm.php';
-        if (is_file($thinkorm_file)) {
-            echo 'Remove config/think-orm.php' . PHP_EOL;
-            unlink($thinkorm_file);
+        foreach ([config_path('think-orm.php'), config_path('thinkorm.php')] as $thinkorm_file) {
+            if (is_file($thinkorm_file)) {
+                echo 'Remove think-orm.php' . PHP_EOL;
+                unlink($thinkorm_file);
+            }
+        }
+        $config_file = config_path() . '/bootstrap.php';
+        $config = include $config_file;
+        if(in_array(ThinkOrm::class, $config ?? [])) {
+            $config_file = config_path() . '/bootstrap.php';
+            $config_file_content = file_get_contents($config_file);
+            $config_file_content = preg_replace('/ {0,4}Webman\\\\ThinkOrm\\\\ThinkOrm::class,?\r?\n?/', '', $config_file_content);
+            file_put_contents($config_file, $config_file_content);
         }
         self::uninstallByRelation();
     }
