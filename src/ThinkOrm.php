@@ -5,6 +5,7 @@ namespace Webman\ThinkOrm;
 use think\Paginator;
 use support\think\Db;
 use Webman\Bootstrap;
+use think\Container;
 
 class ThinkOrm implements Bootstrap
 {
@@ -28,9 +29,7 @@ class ThinkOrm implements Bootstrap
             return;
         }
 
-        if (!class_exists(\think\facade\Db::class, false)) {
-            class_alias(\support\think\Db::class, \think\facade\Db::class);
-        }
+        Container::getInstance()->bind('think\DbManager', DbManager::class);
 
         // 配置
         Db::setConfig($config);
