@@ -51,7 +51,11 @@ class DbManager extends \think\DbManager
                     $this->closeConnection($connection);
                 });
                 $pool->setHeartbeatChecker(function ($connection) {
-                    $connection->query('select 1');
+                    if ($connection->getDriverName() === 'mongodb') {
+                        $connection->command(['ping' => 1]);
+                        return;
+                    }
+                    $connection->select('select 1');
                 });
                 static::$pools[$name] = $pool;
             }
