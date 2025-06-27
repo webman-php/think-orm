@@ -36,7 +36,7 @@ class ThinkOrm implements Bootstrap
         Db::setConfig($config);
 
         if (class_exists(Cache::class)) {
-            Db::setCache(Cache::store());
+            Db::setCache(new ThinkCache());
         }
 
         Paginator::currentPageResolver(function ($pageName = 'page') {
