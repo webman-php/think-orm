@@ -36,7 +36,7 @@ class ThinkOrm implements Bootstrap
         Db::setConfig($config);
 
         if (class_exists(Cache::class)) {
-            self::setDbChace();
+            Db::setCache(new ThinkCache());
         }
 
         Paginator::currentPageResolver(function ($pageName = 'page') {
@@ -56,18 +56,5 @@ class ThinkOrm implements Bootstrap
             $request = request();
             return $request ? $request->path() : '/';
         });
-    }
-
-    protected static function setDbChace()
-    {
-        $cache = Cache::store();
-        
-        Db::setCache($cache);
-
-        if (method_exists($cache, 'onClose')) {
-            $cache->onClose(function () {
-                self::setDbChace();
-            });
-        }
     }
 }
