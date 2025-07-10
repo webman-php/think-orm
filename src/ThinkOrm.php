@@ -56,5 +56,19 @@ class ThinkOrm implements Bootstrap
             $request = request();
             return $request ? $request->path() : '/';
         });
+
+        // 设置自定义分页类
+        $connections = $config['connections'] ?? [];
+        foreach ($connections as $connection) {
+            if (!empty($connection['bootstrap'])) {
+                $bootstrapClass = $connection['bootstrap'];
+                if (class_exists($bootstrapClass)) {
+                    Paginator::maker(function ($items, $listRows, $currentPage, $total, $simple, $options) use ($bootstrapClass) {
+                        return new $bootstrapClass($items, $listRows, $currentPage, $total, $simple, $options);
+                    });
+                    break; // 只需要设置一次
+                }
+            }
+        }
     }
 }
