@@ -2,8 +2,6 @@
 
 return [
     'default' => 'mysql',
-    // 自定义分页类
-    'paginator' =>  '',
     'connections' => [
         'mysql' => [
             // 数据库类型
@@ -39,4 +37,6 @@ return [
             ],
         ],
     ],
+    // 自定义分页类
+    'paginator' =>  '',
 ];
