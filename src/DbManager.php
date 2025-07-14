@@ -39,10 +39,11 @@ class DbManager extends \think\DbManager
         if (empty($name)) {
             $name = $this->getConfig('default', 'mysql');
         }
-        $key = "think-orm.connections.$name";
+        $key = is_array($name) ? md5(json_encode($name)) : $name;
+        $key = "think-orm.connections.$key";
         $connection = Context::get($key);
         if (!$connection) {
-            if (!isset(static::$pools[$name])) {
+            if (is_string($name) && !isset(static::$pools[$name])) {
                 $poolConfig = $this->config['connections'][$name]['pool'] ?? [];
                 $pool = new Pool($poolConfig['max_connections'] ?? 10, $poolConfig);
                 $pool->setConnectionCreator(function () use ($name) {
@@ -60,6 +61,8 @@ class DbManager extends \think\DbManager
                     $connection->query('select 1');
                 });
                 static::$pools[$name] = $pool;
+            } else {
+                return $this->createConnection($name);
             }
             try {
                 $connection = static::$pools[$name]->get();
