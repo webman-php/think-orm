@@ -61,7 +61,7 @@ class DbManager extends \think\DbManager
                     $connection->query('select 1');
                 });
                 static::$pools[$name] = $pool;
-            } else {
+            } elseif (is_array($name)) {
                 return $this->createConnection($name);
             }
             try {
