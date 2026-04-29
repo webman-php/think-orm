@@ -11,6 +11,7 @@ use Throwable;
 use think\db\ConnectionInterface;
 use think\db\BaseQuery;
 use think\db\Query;
+use support\Log;
 
 /**
  * Class DbManager.
@@ -75,7 +76,16 @@ class DbManager extends \think\DbManager
             } finally {
                 Context::onDestroy(function () use ($connection, $name) {
                     try {
-                        $connection && static::$pools[$name]->put($connection);
+                        if ($connection) {
+                            if (method_exists($connection, 'getPdo')) {
+                                $pdo = $connection->getPdo();
+                                if ($pdo && $pdo->inTransaction()) {
+                                    $connection->rollBack();
+                                    Log::error("Uncommitted transaction found and try to rollback for connection: $name");
+                                }
+                            }
+                            static::$pools[$name]->put($connection);
+                        }
                     } catch (Throwable) {
                         // ignore
                     }
@@ -131,6 +141,17 @@ class DbManager extends \think\DbManager
      */
     protected function closeConnection(ConnectionInterface $connection, ?string $name = null): void
     {
+        if (method_exists($connection, 'getPdo')) {
+            try {
+                $pdo = $connection->getPdo();
+                if ($pdo && $pdo->inTransaction()) {
+                    $connection->rollBack();
+                    Log::error("Uncommitted transaction found and try to rollback for connection: $name");
+                }
+            } catch (Throwable) {
+                // ignore
+            }
+        }
         $connection->close();
         $clearProperties = function () {
             $this->db = null;
